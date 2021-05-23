@@ -15,6 +15,8 @@ public:
 	float GetLengthSq() const;
 	Vec2& Normalize();
 	Vec2 GetNormalized() const;
+	void Rotate_by_90_degree_clockwise_wrt_origin(const Vec2 &Origin);
+	void Rotate_by_90_degree_anticlockwise_wrt_origin(const Vec2 &Origin);
 public:
 	float x;
 	float y;
