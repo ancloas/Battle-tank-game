@@ -5,7 +5,7 @@
 #include "Rectf.h"
 #include "Vec2.h"
 
-enum stance { RIGHT, LEFT, UP, DOWN};
+enum stance { RIGHT = -1, LEFT=1, UP=-2, DOWN=2 };
 class Tank {
 public:
 	Tank(Vec2  centre, float  speed, float length, float breadth, Color color);
@@ -22,8 +22,9 @@ public:
 	bool Overlaps_with_Rect(const Rectf & rect);
 	float bullet_power();
 	bool isInCoolDown(const float & dt);
+	float Get_Bullet_speed();
 private:
-	const float speed=100.0f;
+	const float speed;
 	Rectf body;
 	Rectf barrel;
 	stance front = RIGHT;
@@ -35,9 +36,9 @@ private:
 	};
 	Power PowerUP = None;
 	float health = 5.0;
-	float bullet_speed=300.0f;
-	float bullet_length = 3.0f;
-	float bullet_breadth = 2.0f;
+	float bullet_length = 10.0f;
+	float bullet_breadth = 10.0f;
 	bullet_type bullet_type=light;
-	float cool_down = 0.1f;
+	float cool_down = 0.2f;
+	bool in_Motion = false;
 };

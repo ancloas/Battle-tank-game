@@ -14,6 +14,7 @@ Tank::Tank(Vec2 centre, float  speed, float length, float breadth, Color color)
 void Tank::fire_bullet()
 { 
 	float bulletpower = bullet_power();
+	float bullet_speed = Get_Bullet_speed();
 	if (front == RIGHT)
 	{
 		bullet *b = new bullet(Vec2(barrel.get_right() + bullet_length, barrel.centre.y), Vec2(bullet_speed, 0.0f), bullet_length, bullet_breadth,bulletpower, bullet_type);
@@ -35,7 +36,7 @@ void Tank::fire_bullet()
 		bullet * b = new bullet(Vec2(barrel.centre.x, barrel.get_top() + bullet_length), Vec2(0.0f, bullet_speed), bullet_breadth, bullet_length, bulletpower, bullet_type);
 		bulletlist.add_bullet(b);
 	}
-	cool_down = 0.1f;
+	cool_down = 0.2f;
 }
 
 void Tank::move_right(const float& dt)
@@ -47,13 +48,16 @@ void Tank::move_right(const float& dt)
 		{
 			body.flip_horizontly();
 			barrel.flip_horizontly();
-			barrel.centre.y = body.centre.y;//change the barrel of y coordinate to be same as x
+			barrel.centre.y = body.centre.y;
+			//change the barrel of y coordinate to be same as x
 		}
-		barrel.centre.x = body.get_right() + barrel.width / 2; // make the barrel at right side of the 
+		barrel.centre.x = body.get_right() + barrel.width / 2;
+		front = RIGHT;
+		return;
+		// make the barrel at right side of the 
 	}
 	    body.centre.x += speed*dt;
 		barrel.centre.x += speed * dt;
-		front = RIGHT;
 }
 
 void Tank::move_left(const float & dt)
@@ -67,10 +71,11 @@ void Tank::move_left(const float & dt)
 			barrel.centre.y = body.centre.y;  //change barrel y coordinate to same as centre of tank body
 		}
 		barrel.centre.x = body.get_left() - barrel.width / 2; // make the barrel at right side of the 
+		front = LEFT;
+		return;
 	}
 	body.centre.x -= speed * dt;
 	barrel.centre.x -= speed * dt;
-	front = LEFT;
 }
 
 void Tank::move_down(const float &dt)
@@ -84,10 +89,11 @@ void Tank::move_down(const float &dt)
 			barrel.centre.x = body.centre.x;  //change barrel x coordinate to same as centre of tank body
 		}
 		barrel.centre.y = body.get_bottom() + barrel.height / 2; // make the barrel at right side of the 
+		front = DOWN;
+		return;
 	}
 	body.centre.y += speed * dt;
 	barrel.centre.y += speed * dt;
-	front = DOWN;
 }
 
 void Tank::move_up(const float &dt)
@@ -101,28 +107,37 @@ void Tank::move_up(const float &dt)
 			barrel.centre.x = body.centre.x;  //change barrel x coordinate to same as centre of tank body
 		}
 		barrel.centre.y = body.get_top() - barrel.height / 2; // make the barrel at right side of the 
+		front = UP;
+		return;
 	}
 	body.centre.y -= speed * dt;
 	barrel.centre.y -= speed * dt;
-	front = UP;
 }
 void Tank::Update(const float& dt, Keyboard& Kbd)
 {
 	if (Kbd.KeyIsPressed(VK_RIGHT))
 	{
       move_right(dt);
+	  in_Motion = true;
 	}
 	else if (Kbd.KeyIsPressed(VK_LEFT))
 	{
 		move_left(dt);
+		in_Motion = true;
 	}
 	else if (Kbd.KeyIsPressed(VK_UP))
 	{
 		move_up(dt);
+		in_Motion = true;
 	}
 	else if (Kbd.KeyIsPressed(VK_DOWN))
 	{
 		move_down(dt);
+		in_Motion = true;
+	}
+	else 
+	{
+		in_Motion = false;
 	}
 
 	bulletlist.Update(dt);
@@ -172,4 +187,9 @@ bool Tank::isInCoolDown(const float& dt)
 	if (cool_down <= 0)
 		return false;
 	return true;
+}
+
+float Tank::Get_Bullet_speed()
+{
+	return float(bullet_type) + in_Motion * speed; //if in motion the speed is relative
 }

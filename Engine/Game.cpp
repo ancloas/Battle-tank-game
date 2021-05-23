@@ -45,14 +45,13 @@ void Game::Go()
 void Game::UpdateModel(const float & dt)
 {   
 
-
-	tank1.Update(dt, wnd.kbd);
-
 	if (wnd.kbd.KeyIsPressed(VK_SPACE))
 	{
-		if(!tank1.isInCoolDown(dt))
-		tank1.fire_bullet();
+		if (!tank1.isInCoolDown(dt))
+			tank1.fire_bullet();
 	}
+	tank1.Update(dt, wnd.kbd);
+
 }
 
 void Game::ComposeFrame()
