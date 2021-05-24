@@ -25,9 +25,9 @@ Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd ),
-	Player1(Vec2(300.0f,300.0f),50.0f, 30.0f, 20.0f, Colors::Green),
+	Player1(Vec2(300.0f,300.0f),Vec2(50.0f,0.0f), 30.0f, 20.0f, Colors::Green),
 	Wall(Vec2(400,300),600, 600),
-	Origin(Vec2(Wall.get_left(),Wall.get_top())),
+	Origin(Vec2(Wall.get_left(),Wall.get_top()))
 {
 }
 
