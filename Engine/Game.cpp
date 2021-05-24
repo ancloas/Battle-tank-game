@@ -25,7 +25,9 @@ Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd ),
-	tank1(Vec2(300.0f,300.0f),300.0f, 50.0f, 30.0f, Colors::Green)
+	Player1(Vec2(300.0f,300.0f),50.0f, 30.0f, 20.0f, Colors::Green),
+	Wall(Vec2(400,300),600, 600),
+	Origin(Vec2(Wall.get_left(),Wall.get_top())),
 {
 }
 
@@ -37,7 +39,8 @@ void Game::Go()
 	{  
 		float dt = std::min(elapsed_time, 0.025f);
 		UpdateModel(dt);
-		elapsed_time -= dt;	}
+		elapsed_time -= dt;
+	}
 	ComposeFrame();
 	gfx.EndFrame();
 }
@@ -47,14 +50,15 @@ void Game::UpdateModel(const float & dt)
 
 	if (wnd.kbd.KeyIsPressed(VK_SPACE))
 	{
-		if (!tank1.isInCoolDown(dt))
-			tank1.fire_bullet();
+		if (!Player1.isInCoolDown(dt))
+			Player1.fire_bullet();
 	}
-	tank1.Update(dt, wnd.kbd);
-
-}
+	Player1.Update(dt, wnd.kbd);
+	Player1.Touched_Wall(Wall);
+	}
 
 void Game::ComposeFrame()
 {
-	tank1.draw_Tank(gfx);
+	Player1.draw_Tank(gfx);
+	
 }

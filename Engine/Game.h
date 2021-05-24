@@ -25,6 +25,9 @@
 #include "Graphics.h"
 #include "tank.h"
 #include "FrameTimer.h"
+#include "Rectf.h"
+#include "Vec2.h"
+#include "vector"
 
 class Game
 {
@@ -51,7 +54,9 @@ private:
 	/********************************/
 	/*  User Variables              */
 	FrameTimer ft;
-	Tank tank1;
-
+	Tank Player1;
+	Rectf Wall;
+	std::vector<Tank> Enenmy;
+	Vec2 Origin;
 	/********************************/
 };
