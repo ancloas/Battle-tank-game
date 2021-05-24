@@ -1,143 +1,145 @@
 #include "Tank.h"
 
-Tank::Tank(Vec2 centre, float  speed, float length, float breadth, Color color)
+Tank::Tank(Vec2 centre, Vec2 velocity, float length, float breadth, Color color)
 	:
 	body(centre, length, breadth),
-	speed(speed),
+    velocity(velocity),
 	front(RIGHT),
 	bulletlist(),
 	color(color),
 	barrel(Vec2(centre.x + 3.0f / 4.0f * length, centre.y), length/2.0f, breadth / 4.0f)
 {
+	update_velocity();
 }
 
 void Tank::fire_bullet()
 { 
 	float bulletpower = bullet_power();
-	float bullet_speed = Get_Bullet_speed();
-	if (front == RIGHT)
-	{
-		bullet *b = new bullet(Vec2(barrel.get_right() + bullet_length, barrel.centre.y), Vec2(bullet_speed, 0.0f), bullet_length, bullet_breadth,bulletpower, bullet_type);
-		bulletlist.add_bullet(b);
-	}
-	if (front == LEFT)
-	{
-		bullet * b= new bullet(Vec2(barrel.get_left() - bullet_length, barrel.centre.y), Vec2(-bullet_speed, 0.0f), bullet_length, bullet_breadth, bulletpower, bullet_type);
-		bulletlist.add_bullet(b);
-	}
-	if (front == UP)
-	{
-		bullet * b = new bullet(Vec2( barrel.centre.x, barrel.get_top() - bullet_length), Vec2(0.0f, -bullet_speed), bullet_breadth, bullet_length, bulletpower, bullet_type);
-
-		bulletlist.add_bullet(b);
-	}
-	if (front == DOWN)
-	{
-		bullet * b = new bullet(Vec2(barrel.centre.x, barrel.get_top() + bullet_length), Vec2(0.0f, bullet_speed), bullet_breadth, bullet_length, bulletpower, bullet_type);
-		bulletlist.add_bullet(b);
-	}
+	Vec2 bullet_velocity = Get_Bullet_Velocity();
+	bullet * b = new bullet(barrel.centre,bullet_velocity, bullet_length, bullet_breadth, bulletpower, bullet_type);
+	if (front == UP || front == DOWN)
+		b->flip_horizontly();
+    bulletlist.add_bullet(b);
 	cool_down = 0.2f;
 }
 
-void Tank::move_right(const float& dt)
+void Tank::turn_right()
 {// front ==right move dt*velocity
 //else 
-	if (front != RIGHT)
-	{
-		if(!(front==LEFT))
-		{
-			body.flip_horizontly();
-			barrel.flip_horizontly();
-			barrel.centre.y = body.centre.y;
-			//change the barrel of y coordinate to be same as x
-		}
-		barrel.centre.x = body.get_right() + barrel.width / 2;
-		front = RIGHT;
+	if (front == RIGHT)
 		return;
-		// make the barrel at right side of the 
+
+	if (front == LEFT)
+	{
+		Rotate_90_degree_cw();
+		Rotate_90_degree_cw();
 	}
-	    body.centre.x += speed*dt;
-		barrel.centre.x += speed * dt;
+	else if (front == UP)
+			Rotate_90_degree_cw();
+	else Rotate_90_degree_acw();
+	front = RIGHT;
 }
 
-void Tank::move_left(const float & dt)
+void Tank::turn_left()
 {
- 	if (front != LEFT)
-	{
-		if (!(front == RIGHT))
-		{
-			body.flip_horizontly();
-			barrel.flip_horizontly();
-			barrel.centre.y = body.centre.y;  //change barrel y coordinate to same as centre of tank body
-		}
-		barrel.centre.x = body.get_left() - barrel.width / 2; // make the barrel at right side of the 
-		front = LEFT;
+	if (front == LEFT)
 		return;
+	if (front == RIGHT)
+	{
+		Rotate_90_degree_cw();
+		Rotate_90_degree_cw();
 	}
-	body.centre.x -= speed * dt;
-	barrel.centre.x -= speed * dt;
+	else if (front == UP)
+		Rotate_90_degree_acw();
+	else Rotate_90_degree_cw();
+	front = LEFT;	
 }
 
-void Tank::move_down(const float &dt)
+void Tank::turn_down()
 {
-	if (front != DOWN)
-	{
-		if (!(front == UP))
-		{
-			body.flip_horizontly();
-			barrel.flip_horizontly();
-			barrel.centre.x = body.centre.x;  //change barrel x coordinate to same as centre of tank body
-		}
-		barrel.centre.y = body.get_bottom() + barrel.height / 2; // make the barrel at right side of the 
-		front = DOWN;
+	if (front == DOWN)
 		return;
-	}
-	body.centre.y += speed * dt;
-	barrel.centre.y += speed * dt;
+    if (front == UP)
+    {
+    	Rotate_90_degree_cw();
+    	Rotate_90_degree_cw();
+    }
+    else if (front == LEFT)
+    	Rotate_90_degree_acw();
+    else Rotate_90_degree_cw();
+    front = DOWN;
 }
 
-void Tank::move_up(const float &dt)
+void Tank::turn_up()
 {
-	if (front != UP)
-	{
-		if (!(front == DOWN))
-		{
-			body.flip_horizontly();
-			barrel.flip_horizontly();
-			barrel.centre.x = body.centre.x;  //change barrel x coordinate to same as centre of tank body
-		}
-		barrel.centre.y = body.get_top() - barrel.height / 2; // make the barrel at right side of the 
-		front = UP;
+	if (front == UP)
 		return;
+	if (front == DOWN)
+	{
+		Rotate_90_degree_cw();
+		Rotate_90_degree_cw();
 	}
-	body.centre.y -= speed * dt;
-	barrel.centre.y -= speed * dt;
+	else if (front == RIGHT)
+		Rotate_90_degree_acw();
+	else Rotate_90_degree_cw();
+	front = UP;
 }
 void Tank::Update(const float& dt, Keyboard& Kbd)
 {
-	if (Kbd.KeyIsPressed(VK_RIGHT))
-	{
-      move_right(dt);
-	  in_Motion = true;
-	}
-	else if (Kbd.KeyIsPressed(VK_LEFT))
-	{
-		move_left(dt);
-		in_Motion = true;
-	}
-	else if (Kbd.KeyIsPressed(VK_UP))
-	{
-		move_up(dt);
-		in_Motion = true;
-	}
-	else if (Kbd.KeyIsPressed(VK_DOWN))
-	{
-		move_down(dt);
-		in_Motion = true;
-	}
-	else 
+	if (Kbd.KeyIsEmpty())
 	{
 		in_Motion = false;
+	}
+	else {
+		if (Kbd.KeyIsPressed(VK_RIGHT))
+		{
+			if (front != RIGHT)
+			{
+				turn_right();
+				in_Motion = false;
+			}
+			else {
+				in_Motion = true;
+			}
+		}
+		if (Kbd.KeyIsPressed(VK_LEFT))
+		{
+			if (front != LEFT)
+			{
+				turn_left();
+				in_Motion = false;
+			}
+			else {
+				in_Motion = true;
+			}
+		}
+		if (Kbd.KeyIsPressed(VK_UP))
+		{
+			if (front != UP)
+			{
+				turn_up();
+				in_Motion = false;
+			}
+			else {
+				in_Motion = true;
+			}
+		}
+		if (Kbd.KeyIsPressed(VK_DOWN))
+		{
+			if (front != DOWN)
+			{
+				turn_down();
+				in_Motion = false;
+			}
+			else {
+				in_Motion = true;
+			}
+		}
+	}
+	update_velocity(); //updating direction of velocity
+	if (in_Motion)
+	{
+		Displace(velocity*dt);
 	}
 
 	bulletlist.Update(dt);
@@ -189,9 +191,9 @@ bool Tank::isInCoolDown(const float& dt)
 	return true;
 }
 
-float Tank::Get_Bullet_speed()
+Vec2 Tank::Get_Bullet_Velocity()
 {
-	return float(bullet_type) + in_Motion * speed; //if in motion the speed is relative
+   return velocity.GetNormalized()*float(bullet_type)+velocity*in_Motion;
 }
 
 bool Tank::Touched_Wall(const Rectf &Wall)
@@ -224,10 +226,28 @@ void Tank::Displace(const Vec2 & displacement)
 	body.Displaced(displacement);
 	barrel.Displaced(displacement);
 }
-void Tank::Rotate_90_degree()
+void Tank::Rotate_90_degree_cw()
 {
-	 
 	body.flip_horizontly();
 	barrel.flip_horizontly();
 	barrel.centre.Rotate_by_90_degree_clockwise_wrt_origin(body.centre);
+}
+void Tank::Rotate_90_degree_acw()
+{
+	body.flip_horizontly();
+	barrel.flip_horizontly();
+	barrel.centre.Rotate_by_90_degree_anticlockwise_wrt_origin(body.centre);
+}
+void Tank::update_velocity()
+{
+	float magnitude = velocity.GetLength();
+	if (front == RIGHT)
+		velocity = Vec2(1, 0)*magnitude;
+	if (front == LEFT)
+		velocity = Vec2(-1, 0)*magnitude;
+	if (front == DOWN)
+		velocity = Vec2(0, 1)*magnitude;
+	if (front == UP)
+		velocity = Vec2(0, -1)*magnitude;
+
 }

@@ -8,12 +8,12 @@
 enum stance { LEFT = 0, UP=1, RIGHT=2, DOWN=3 };
 class Tank {
 public:
-	Tank(Vec2  centre, float  speed, float length, float breadth, Color color);
+	Tank(Vec2  centre, Vec2  velocity, float length, float breadth, Color color);
 	void fire_bullet();
-	void move_right(const float & dt);
-	void move_left(const float & dt);
-	void move_down(const float & dt);
-	void move_up(const float & dt);
+	void turn_right();
+	void turn_left();
+	void turn_down();
+	void turn_up();
 	void Update(const float& dt, Keyboard & Kbd);
 	void Update(const  float& dt, const Tank & tnk);
 	void draw_Tank(Graphics &gfx);
@@ -22,12 +22,14 @@ public:
 	bool Overlaps_with_Rect(const Rectf & rect);
 	float bullet_power();
 	bool isInCoolDown(const float & dt);
-	float Get_Bullet_speed();
+	Vec2 Get_Bullet_Velocity();
 	bool Touched_Wall(const Rectf & Wall);
 	void Displace(const Vec2 & displacement);
-	void Rotate_90_degree();
+	void Rotate_90_degree_cw();
+	void Rotate_90_degree_acw();
+	void update_velocity();
 private:
-	const float speed;
+	Vec2 velocity;
 	Rectf body;
 	Rectf barrel;
 	stance front = RIGHT;
