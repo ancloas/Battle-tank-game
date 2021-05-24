@@ -333,6 +333,44 @@ void Graphics::DrawRectangle_by_Centre(int centre_x, int centre_y, int width, in
 	}
  }
 
+void Graphics::Draw_Hollow_Rectangle_by_Centre(int centre_x, int centre_y, int width, int height, Color c)
+{
+	//left & right boundary
+	for (int i = -height/2; i < height/ 2; i++)
+	{
+		PutPixel(centre_x - width / 2, centre_y +i, c);
+		PutPixel(centre_x + width / 2-1, centre_y + i, c);
+
+	}
+	//left & right boundary
+	for (int i = -height / 2; i < height / 2; i++)
+	{
+		PutPixel(centre_x +  i, centre_y - height/2, c);
+		PutPixel(centre_x + i, centre_y + height/2-1, c);
+
+	}
+
+	////right boundary
+	//for (int i = 0; i < height / 2; i++)
+	//{
+	//	PutPixel(centre_x + width / 2, centre_y + i, c);
+	//	PutPixel(centre_x + width / 2, centre_y - i, c);
+	//}
+	////top boundary
+	//for (int i = 0; i < width / 2; i++)
+	//{
+	//	PutPixel(centre_x + i, centre_y - height / 2-1, c);
+	//	PutPixel(centre_x - i, centre_y - height / 2-1, c);
+	//}
+	//
+	////bottom boundary
+	//for (int i = 0; i < width / 2; i++)
+	//{
+	//	PutPixel(centre_x + i, centre_y + height/2-1, c);
+	//	PutPixel(centre_x -i, centre_y + height/2-1, c);
+	//}
+	}
+
 
 //////////////////////////////////////////////////
 //           Graphics Exception

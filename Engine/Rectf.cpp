@@ -32,6 +32,11 @@ void Rectf::draw_solid(Graphics & gfx, Color color)
 	gfx.DrawRectangle_by_Centre(int(centre.x), int(centre.y), int(width), int(height), color);
 }
 
+void Rectf::draw_hollow(Graphics & gfx, Color color)
+{
+	gfx.Draw_Hollow_Rectangle_by_Centre(int(centre.x), int(centre.y), int(width), int(height), color);
+}
+
 
 void Rectf::Displaced(Vec2 displacement)
 {

@@ -12,6 +12,7 @@ public:
 	void flip_horizontly();
 	bool Overlaps_With(const Rectf& Rect);
 	void draw_solid(Graphics & gfx, Color color);
+	void draw_hollow(Graphics & gfx, Color color);
 	void Displaced(Vec2 Displacement);
 	const Vec2 Get_Centre() const;
     virtual void Get_Hit(float Damage);

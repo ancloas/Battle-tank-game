@@ -60,5 +60,5 @@ void Game::UpdateModel(const float & dt)
 void Game::ComposeFrame()
 {
 	Player1.draw_Tank(gfx);
-	
+	Wall.draw_hollow(gfx,Colors::Magenta);
 }

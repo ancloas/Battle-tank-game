@@ -58,6 +58,7 @@ public:
 	void PutPixel( int x,int y,Color c );
 	void DrawRectangle(int x, int y, int width, int height, Color c);
 	void DrawRectangle_by_Centre(int centre_x, int centre_y, int width, int height, Color c);
+	void Draw_Hollow_Rectangle_by_Centre(int centre_x, int centre_y, int width, int height, Color c);
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;
