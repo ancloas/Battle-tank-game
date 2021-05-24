@@ -63,16 +63,18 @@ Vec2 Vec2::GetNormalized() const
 	return *this;
 }
 
-void Vec2::Rotate_by_90_degree_clockwise_wrt_origin(const Vec2 & Origin)
+void Vec2::Rotate_by_90_degree_anticlockwise_wrt_origin(const Vec2 & Origin)
 {
 	Vec2 Pos_wrt_Origin_after_rotation =Vec2((*this-Origin).y,-1*(*this - Origin).x);
 
 	*this = Origin + Pos_wrt_Origin_after_rotation;
 }
 
-void Vec2::Rotate_by_90_degree_anticlockwise_wrt_origin(const Vec2 & Origin)
+void Vec2::Rotate_by_90_degree_clockwise_wrt_origin(const Vec2 & Origin)
 {
 	Vec2 Pos_wrt_Origin_after_rotation = Vec2(-1*(*this - Origin).y, (*this - Origin).x);
 
 	*this = Origin + Pos_wrt_Origin_after_rotation;
+
+	//listen the y coordinate increases when you go up so if you increase its anticlockwise tihs is clockwise just think its reverse
 }
