@@ -5,7 +5,7 @@
 #include "Rectf.h"
 #include "Vec2.h"
 
-enum stance { RIGHT = -1, LEFT=1, UP=-2, DOWN=2 };
+enum stance { LEFT = 0, UP=1, RIGHT=2, DOWN=3 };
 class Tank {
 public:
 	Tank(Vec2  centre, float  speed, float length, float breadth, Color color);
@@ -23,6 +23,9 @@ public:
 	float bullet_power();
 	bool isInCoolDown(const float & dt);
 	float Get_Bullet_speed();
+	bool Touched_Wall(const Rectf & Wall);
+	void Displace(const Vec2 & displacement);
+	void Rotate_90_degree();
 private:
 	const float speed;
 	Rectf body;
@@ -36,8 +39,8 @@ private:
 	};
 	Power PowerUP = None;
 	float health = 5.0;
-	float bullet_length = 10.0f;
-	float bullet_breadth = 10.0f;
+	float bullet_length = 20.0f;
+	float bullet_breadth = 5.0f;
 	bullet_type bullet_type=light;
 	float cool_down = 0.2f;
 	bool in_Motion = false;

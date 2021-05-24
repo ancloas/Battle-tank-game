@@ -7,7 +7,7 @@ Tank::Tank(Vec2 centre, float  speed, float length, float breadth, Color color)
 	front(RIGHT),
 	bulletlist(),
 	color(color),
-	barrel(Vec2(centre.x + 3.0f / 4.0f * length, centre.y), length / 2.0f, breadth / 8.0f)
+	barrel(Vec2(centre.x + 3.0f / 4.0f * length, centre.y), length/2.0f, breadth / 4.0f)
 {
 }
 
@@ -62,7 +62,7 @@ void Tank::move_right(const float& dt)
 
 void Tank::move_left(const float & dt)
 {
-	if (front != LEFT)
+ 	if (front != LEFT)
 	{
 		if (!(front == RIGHT))
 		{
@@ -192,4 +192,42 @@ bool Tank::isInCoolDown(const float& dt)
 float Tank::Get_Bullet_speed()
 {
 	return float(bullet_type) + in_Motion * speed; //if in motion the speed is relative
+}
+
+bool Tank::Touched_Wall(const Rectf &Wall)
+{   
+	bool  is_touched = false;
+	if (barrel.get_right() > Wall.get_right())
+	{
+		Displace(Vec2(Wall.get_right() - barrel.get_right(), 0));
+		is_touched = true;
+	}
+	if (barrel.get_left() < Wall.get_left())
+	{
+		Displace(Vec2(Wall.get_left() - barrel.get_left(), 0));
+		is_touched = true;
+	}
+	if (barrel.get_bottom() > Wall.get_bottom())
+	{
+		Displace(Vec2(0, Wall.get_bottom() - barrel.get_bottom()));
+	    is_touched = true;
+	}
+	if (barrel.get_top() < Wall.get_top())
+	{
+		Displace(Vec2(0, Wall.get_top() - barrel.get_top()));
+		is_touched = true;
+	}
+	return is_touched;
+}                  
+void Tank::Displace(const Vec2 & displacement)
+{
+	body.Displaced(displacement);
+	barrel.Displaced(displacement);
+}
+void Tank::Rotate_90_degree()
+{
+	 
+	body.flip_horizontly();
+	barrel.flip_horizontly();
+	barrel.centre.Rotate_by_90_degree_clockwise_wrt_origin(body.centre);
 }
