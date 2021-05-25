@@ -7,7 +7,7 @@ Tank::Tank(Vec2 centre, Vec2 velocity, float length, float breadth, Color color)
 	front(RIGHT),
 	bulletlist(),
 	color(color),
-	barrel(Vec2(centre.x + 3.0f / 4.0f * length, centre.y), length/2.0f, breadth / 4.0f)
+	barrel(Vec2(body.get_right()+length/8.0f, centre.y), length/4.0f, breadth / 8.0f)
 {
 	update_velocity();
 }
@@ -250,4 +250,20 @@ void Tank::update_velocity()
 	if (front == UP)
 		velocity = Vec2(0, -1)*magnitude;
 
+}
+void Tank::Respawn(const Vec2& Origin)
+{
+	life--;
+	turn_up();
+	health = 5.0f;
+	turn_right();
+	Displace(Origin+Vec2(body.width/2 - body.centre.x, body.height/2 - body.centre.y));
+}
+const float& Tank::Get_health() const
+{
+	return health;
+} 
+const float& Tank::Get_Life() const
+{
+	return life;
 }

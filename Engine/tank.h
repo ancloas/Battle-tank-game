@@ -28,6 +28,9 @@ public:
 	void Rotate_90_degree_cw();
 	void Rotate_90_degree_acw();
 	void update_velocity();
+	void Respawn(const Vec2 &origin);
+	const float & Get_health() const;
+	const float & Get_Life() const;
 private:
 	Vec2 velocity;
 	Rectf body;
@@ -41,6 +44,7 @@ private:
 	};
 	Power PowerUP = None;
 	float health = 5.0;
+	int life = 3;
 	float bullet_length = 20.0f;
 	float bullet_breadth = 5.0f;
 	bullet_type bullet_type=light;
