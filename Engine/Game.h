@@ -28,6 +28,7 @@
 #include "Rectf.h"
 #include "Vec2.h"
 #include "vector"
+#include <random>
 
 class Game
 {
@@ -46,6 +47,7 @@ private:
 	void UpdateModel(const float &dt);
 	/********************************/
 	/*  User Functions              */
+	void Spawn_Enemy();
 	/********************************/
 private:
 	MainWindow& wnd;
@@ -54,9 +56,17 @@ private:
 	/********************************/
 	/*  User Variables              */
 	FrameTimer ft;
-	Tank Player1;
 	Rectf Wall;
-	std::vector<Tank> Enenmy;
 	Vec2 Origin;
-	/********************************/
+	Tank Player1;
+	std::vector<Tank> Enemy;
+	float SpawnTime=0.0f;
+	float Enemy_spawn_interval = 5.0f;
+	std::random_device rd;
+	std::mt19937 rng;
+	std::uniform_int_distribution<int> xDist;
+	std::uniform_int_distribution<int> yDist;
+	std::uniform_int_distribution<int> stanceDist;
+	//30 secs spawn time
+ 	/********************************/
 };

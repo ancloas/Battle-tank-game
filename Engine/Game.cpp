@@ -16,7 +16,7 @@
  *	GNU General Public License for more details.										  *
  *																						  *
  *	You should have received a copy of the GNU General Public License					  *
- *	along with The Chili DirectX Framework.  If not, see <http://www.gnu.org/licenses/>.  *
+ *	along with The Chilpmi DirectX Framework.  If not, see <http://www.gnu.org/licenses/>.  *
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
@@ -25,9 +25,13 @@ Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd ),
-	Player1(Vec2(300.0f,300.0f),Vec2(50.0f,0.0f), 30.0f, 20.0f, Colors::Green),
-	Wall(Vec2(400,300),600, 600),
-	Origin(Vec2(Wall.get_left(),Wall.get_top()))
+	Wall(Vec2(400, 300), 600, 600),
+	Origin(Vec2(Wall.get_left(), Wall.get_top())),
+	Player1(Origin+Vec2(300.0f,300.0f),Vec2(200.0f,0.0f), 30.0f, 25.0f, Colors::Green),
+	rng(rd()),
+	xDist(15, int(Wall.width)-17),
+	yDist(15, int(Wall.height)-17),
+	stanceDist(0,3)
 {
 }
 
@@ -47,18 +51,60 @@ void Game::Go()
 
 void Game::UpdateModel(const float & dt)
 {   
-
-	if (wnd.kbd.KeyIsPressed(VK_SPACE))
+	// Firing bullets
+	SpawnTime += dt;
+	if (SpawnTime >= Enemy_spawn_interval ||wnd.kbd.KeyIsPressed(VK_RETURN))
+	{
+		Spawn_Enemy();
+		SpawnTime -= Enemy_spawn_interval;
+	}
+		if (wnd.kbd.KeyIsPressed(VK_SPACE))
 	{
 		if (!Player1.isInCoolDown(dt))
 			Player1.fire_bullet();
-	}
+	}  
+	//Movement
 	Player1.Update(dt, wnd.kbd);
+	//Checking if touching the wall
 	Player1.Touched_Wall(Wall);
+	
+	
+	//Checking if alive
+	if(Player1.Get_Life()>=0 && Player1.Get_health()<=0)
+	{
+		Player1.Respawn(Origin);
 	}
+	for (auto i = 0; i <Enemy.size(); i++)
+	{
+		Enemy[i].Shoot(Player1);
+		if (Player1.Shoot(Enemy[i]))
+			Enemy.erase(Enemy.begin() + i--);
+	}
+
+	}
+
+void Game::Spawn_Enemy()
+{
+	Tank evil(Origin + Vec2(float(xDist(rng)), float(yDist(rng))), Vec2(200.0f, 0.0f), 30.0f, 25.0f, Colors::Yellow);
+	stance front = stance(stanceDist(rng));
+	if (front == RIGHT)
+	    evil.turn_right();
+	if (front == LEFT)
+		evil.turn_left();
+	if (front == UP)
+		evil.turn_up();
+	if (front == DOWN)
+		evil.turn_down();
+	evil.update_velocity();
+	Enemy.push_back(evil);
+}
 
 void Game::ComposeFrame()
 {
 	Player1.draw_Tank(gfx);
 	Wall.draw_hollow(gfx,Colors::Magenta);
+	for (auto i = 0; i < Enemy.size(); i++)
+	{
+		Enemy[i].draw_Tank(gfx);
+	}
 }
