@@ -123,14 +123,26 @@ bullet *ptr = first;
 
 bool bullet_list::hit_target(Tank & tank )
 {
-	bullet *ptr = first;
-	while (ptr != NULL)
+	bool hit = false;
+	bullet *curr = first, *prev=NULL;
+	while (curr != NULL)
 	{
-		if (tank.Overlaps_with_Rect(*ptr))
+		if (tank.Overlaps_with_Rect(*curr))
 		{
-			tank.Get_Hit(ptr->Get_Damage_Power());
-			return true;
+			tank.Get_Hit(curr->Get_Damage_Power());
+			if (prev == NULL)
+				first = curr->next;
+			else
+				prev -> next = curr->next;
+			bullet * temp = curr;
+			curr = curr->next;
+			delete temp;
+			hit= true;
+		}
+		else {
+			prev = curr;
+			curr = curr->next;
 		}
 	}
-	return false;
+	return hit;
 }
