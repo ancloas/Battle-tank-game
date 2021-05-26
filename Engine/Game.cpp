@@ -25,7 +25,7 @@ Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd ),
-	Wall(Vec2(400, 300), 600, 600),
+	Wall(Vec2(400, 300), 600, 500),
 	Origin(Vec2(Wall.get_left(), Wall.get_top())),
 	Player1(Origin+Vec2(300.0f,300.0f),Vec2(200.0f,0.0f), 30.0f, 25.0f, Colors::Green),
 	rng(rd()),
@@ -53,14 +53,14 @@ void Game::UpdateModel(const float & dt)
 {   
 	// Firing bullets
 	SpawnTime += dt;
-	if (SpawnTime >= Enemy_spawn_interval ||wnd.kbd.KeyIsPressed(VK_RETURN))
+	if (SpawnTime >= Enemy_spawn_interval)
 	{
 		Spawn_Enemy();
 		SpawnTime -= Enemy_spawn_interval;
 	}
 		if (wnd.kbd.KeyIsPressed(VK_SPACE))
 	{
-		if (!Player1.isInCoolDown(dt))
+		if (!Player1.isInCoolDown())
 			Player1.fire_bullet();
 	}  
 	//Movement
@@ -76,6 +76,7 @@ void Game::UpdateModel(const float & dt)
 	}
 	for (auto i = 0; i <Enemy.size(); i++)
 	{
+		Enemy[i].Update(dt,Player1, Wall); 
 		Enemy[i].Shoot(Player1);
 		if (Player1.Shoot(Enemy[i]))
 			Enemy.erase(Enemy.begin() + i--);

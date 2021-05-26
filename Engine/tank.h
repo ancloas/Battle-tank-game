@@ -15,13 +15,13 @@ public:
 	void turn_down();
 	void turn_up();
 	void Update(const float& dt, Keyboard & Kbd);
-	void Update(const  float& dt, const Tank & tnk);
+	void Update(const  float& dt, const Tank & tnk, const Rectf &Wall);
 	void draw_Tank(Graphics &gfx);
 	bool Shoot(Tank & enemy);
 	void Get_Hit(float Damage);
 	bool Overlaps_with_Rect(const Rectf & rect);
 	float bullet_power();
-	bool isInCoolDown(const float & dt);
+	bool isInCoolDown();
 	Vec2 Get_Bullet_Velocity();
 	bool Touched_Wall(const Rectf & Wall);
 	void Displace(const Vec2 & displacement);

@@ -145,8 +145,48 @@ void Tank::Update(const float& dt, Keyboard& Kbd)
 	bulletlist.Update(dt);
 	cool_down -= dt;
 }
-void Tank::Update(const float& dt, const Tank & tnk)
+void Tank::Update(const float& dt, const Tank & tnk, const Rectf& Wall)
+{   Vec2 Dir_2_Move =tnk.body.centre-body.centre;
+    float x_dist = Dir_2_Move.x;
+	float y_dist = Dir_2_Move.y;
+
+	if (int(Dir_2_Move.y) == 0)
+	{
+		if (Dir_2_Move.x > 0 && front != RIGHT)
+			turn_right();
+		else
+			if (Dir_2_Move.x < 0 && front != LEFT)
+				turn_left();
+	}
+	if (int(Dir_2_Move.x) == 0)
+	{
+		if (Dir_2_Move.y < 0 && front != UP)
+			turn_up();
+		else
+		if (Dir_2_Move.y > 0 && front != DOWN)
+				turn_down();
+	}
+if (int(x_dist) == 0 || int(y_dist) == 0)
 {
+	if(!isInCoolDown())
+	fire_bullet();
+}
+
+    update_velocity(); //
+	
+	
+	//updating direction of velocity
+	Displace(velocity*dt);
+	bulletlist.Update(dt);
+
+	cool_down -= dt;
+	if (Touched_Wall(Wall))
+	{
+		front = stance((front + 2) % 4);
+		Rotate_90_degree_cw();
+		Rotate_90_degree_cw();
+		update_velocity();//
+  	}
 }
 
 void Tank::draw_Tank(Graphics &gfx)
@@ -184,7 +224,7 @@ float Tank:: bullet_power()
 	return 1.0f;
 }
 
-bool Tank::isInCoolDown(const float& dt)
+bool Tank::isInCoolDown()
 {
 	if (cool_down <= 0)
 		return false;
@@ -265,5 +305,5 @@ const float& Tank::Get_health() const
 } 
 const float& Tank::Get_Life() const
 {
-	return life;
+	return float(life);
 }
