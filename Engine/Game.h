@@ -29,6 +29,7 @@
 #include "Vec2.h"
 #include "vector"
 #include <random>
+#include "SoundEffect.h"
 
 class Game
 {
@@ -67,6 +68,9 @@ private:
 	std::uniform_int_distribution<int> xDist;
 	std::uniform_int_distribution<int> yDist;
 	std::uniform_int_distribution<int> stanceDist;
+	SoundEffect bulletSound;
+	SoundEffect explosionSound;
+	bool GameOver=false;
 	//30 secs spawn time
  	/********************************/
 };

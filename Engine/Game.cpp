@@ -31,7 +31,9 @@ Game::Game( MainWindow& wnd )
 	rng(rd()),
 	xDist(15, int(Wall.width)-17),
 	yDist(15, int(Wall.height)-17),
-	stanceDist(0,3)
+	stanceDist(0,3),
+	bulletSound( {L"Sound\\bullet fire.wav"}),
+	explosionSound({L"Sound\\big explosion.wav"}, 0.2f, 0.25f)
 {
 }
 
@@ -50,38 +52,53 @@ void Game::Go()
 }
 
 void Game::UpdateModel(const float & dt)
-{   
-	// Firing bullets
-	SpawnTime += dt;
-	if (SpawnTime >= Enemy_spawn_interval)
+{
+	if (!GameOver)
 	{
-		Spawn_Enemy();
-		SpawnTime -= Enemy_spawn_interval;
-	}
-		if (wnd.kbd.KeyIsPressed(VK_SPACE))
-	{
-		if (!Player1.isInCoolDown())
-			Player1.fire_bullet();
-	}  
-	//Movement
-	Player1.Update(dt, wnd.kbd);
-	//Checking if touching the wall
-	Player1.Touched_Wall(Wall);
-	
-	
-	//Checking if alive
-	if(Player1.Get_Life()>=0 && Player1.Get_health()<=0)
-	{
-		Player1.Respawn(Origin);
-	}
-	for (auto i = 0; i <Enemy.size(); i++)
-	{
-		Enemy[i].Update(dt,Player1, Wall); 
-		Enemy[i].Shoot(Player1);
-		if (Player1.Shoot(Enemy[i]))
-			Enemy.erase(Enemy.begin() + i--);
-	}
+		SpawnTime += dt;
+		if (SpawnTime >= Enemy_spawn_interval)
+		{
+			Spawn_Enemy();
+			SpawnTime -= Enemy_spawn_interval;
+		}
 
+		//Movement
+		Player1.Update(dt, wnd.kbd);
+		//Checking if touching the wall
+		Player1.Touched_Wall(Wall);
+
+		//Checking if alive
+		if (Player1.Get_Life() >= 0 && Player1.Get_health() <= 0)
+		{
+			Player1.Respawn(Origin);
+		}
+		for (auto i = 0; i < Enemy.size(); i++)
+		{
+			Enemy[i].Update(dt, Player1, Wall);
+			Enemy[i].Shoot(Player1);
+			if (Enemy[i].If_Bullet_Fired())
+				bulletSound.Play(rng, 0.2f);
+			if (Player1.Shoot(Enemy[i]))
+			{
+				explosionSound.Play(rng, 0.05f);
+				Enemy.erase(Enemy.begin() + i--);
+			}
+		}
+		if (Player1.If_Bullet_Fired())
+			bulletSound.Play(rng, 0.2f);
+		if (Player1.If_Destroyed())
+			explosionSound.Play(rng, 0.05f);
+
+		//if Player dies game over
+		if (Player1.If_Destroyed() && Player1.Get_Life() < 0)
+		{
+			GameOver = true;
+		}
+	}
+	else 
+	{
+
+	}
 	}
 
 void Game::Spawn_Enemy()
@@ -102,10 +119,13 @@ void Game::Spawn_Enemy()
 
 void Game::ComposeFrame()
 {
-	Player1.draw_Tank(gfx);
-	Wall.draw_hollow(gfx,Colors::Magenta);
-	for (auto i = 0; i < Enemy.size(); i++)
+	if (!GameOver)
 	{
-		Enemy[i].draw_Tank(gfx);
+		Player1.draw_Tank(gfx);
+		Wall.draw_hollow(gfx, Colors::Magenta);
+		for (auto i = 0; i < Enemy.size(); i++)
+		{
+			Enemy[i].draw_Tank(gfx);
+		}
 	}
 }

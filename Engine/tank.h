@@ -4,7 +4,7 @@
 #include "Keyboard.h"
 #include "Rectf.h"
 #include "Vec2.h"
-
+#include "Sound.h"
 enum stance { LEFT = 0, UP=1, RIGHT=2, DOWN=3 };
 class Tank {
 public:
@@ -31,13 +31,15 @@ public:
 	void Respawn(const Vec2 &origin);
 	const float & Get_health() const;
 	const float & Get_Life() const;
+	const bool If_Bullet_Fired() const;
+	const bool If_Destroyed() const;
 private:
 	Vec2 velocity;
 	Rectf body;
 	Rectf barrel;
 	stance front = RIGHT;
 	bullet_list bulletlist;
-	bool isDestroyed=false;
+	bool isDestroyed = false;
 	Color color;
 	enum Power {
 		None, Invincible, HeavyBullet, SpeedUp, LifeUp, Heal, NuclearBomb
@@ -47,7 +49,8 @@ private:
 	int life = 3;
 	float bullet_length = 20.0f;
 	float bullet_breadth = 5.0f;
-	bullet_type bullet_type=light;
+	bullet_type bullet_type = light;
 	float cool_down = 0.2f;
 	bool in_Motion = false;
+	bool bulletFired = false;
 };

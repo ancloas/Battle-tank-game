@@ -86,60 +86,55 @@ void Tank::turn_up()
 }
 void Tank::Update(const float& dt, Keyboard& Kbd)
 {
-	if (Kbd.KeyIsEmpty())
-	{
-		in_Motion = false;
-	}
-	else {
+	in_Motion = false;
 		if (Kbd.KeyIsPressed(VK_RIGHT))
 		{
 			if (front != RIGHT)
 			{
 				turn_right();
-				in_Motion = false;
+				//in_Motion = false;
 			}
-			else {
 				in_Motion = true;
-			}
 		}
 		if (Kbd.KeyIsPressed(VK_LEFT))
 		{
 			if (front != LEFT)
 			{
 				turn_left();
-				in_Motion = false;
+				//in_Motion = false;
 			}
-			else {
 				in_Motion = true;
-			}
 		}
 		if (Kbd.KeyIsPressed(VK_UP))
 		{
 			if (front != UP)
 			{
 				turn_up();
-				in_Motion = false;
+				//in_Motion = false;
 			}
-			else {
 				in_Motion = true;
-			}
 		}
 		if (Kbd.KeyIsPressed(VK_DOWN))
 		{
 			if (front != DOWN)
 			{
 				turn_down();
-				in_Motion = false;
+			//	in_Motion = false;
 			}
-			else {
 				in_Motion = true;
-			}
 		}
-	}
 	update_velocity(); //updating direction of velocity
 	if (in_Motion)
 	{
 		Displace(velocity*dt);
+	}
+	if (Kbd.KeyIsPressed(VK_SPACE)&&(!isInCoolDown()))
+	{
+		fire_bullet();
+		bulletFired = true;
+	}
+	else {
+		bulletFired = false;
 	}
 
 	bulletlist.Update(dt);
@@ -170,7 +165,9 @@ if (int(x_dist) == 0 || int(y_dist) == 0)
 {
 	if(!isInCoolDown())
 	fire_bullet();
+	bulletFired = true;
 }
+else { bulletFired = false; }
 
     update_velocity(); //
 	
@@ -206,6 +203,10 @@ void Tank::draw_Tank(Graphics &gfx)
 void Tank::Get_Hit(float Damage)
 {
 	health -= Damage;
+	if (health < 0)
+	{
+		isDestroyed = true;
+	}
 }
 
 bool Tank::Overlaps_with_Rect(const Rectf & rect)
@@ -293,11 +294,15 @@ void Tank::update_velocity()
 }
 void Tank::Respawn(const Vec2& Origin)
 {
-	life--;
-	turn_up();
-	health = 5.0f;
-	turn_right();
-	Displace(Origin+Vec2(body.width/2 - body.centre.x, body.height/2 - body.centre.y));
+	if ((life >= 0) &&(isDestroyed))
+	{
+		life--;
+		turn_up();
+		health = 5.0f;
+		turn_right();
+		Displace(Origin + Vec2(body.width / 2 - body.centre.x, body.height / 2 - body.centre.y));
+		isDestroyed = false;
+	}
 }
 const float& Tank::Get_health() const
 {
@@ -306,4 +311,12 @@ const float& Tank::Get_health() const
 const float& Tank::Get_Life() const
 {
 	return float(life);
+}
+const bool Tank::If_Destroyed() const
+{
+	return isDestroyed;
+}
+const bool Tank::If_Bullet_Fired() const
+{
+	return bulletFired;
 }
