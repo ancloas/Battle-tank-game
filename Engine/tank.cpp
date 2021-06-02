@@ -161,9 +161,8 @@ void Tank::Update(const float& dt, const Tank & tnk, const Rectf& Wall)
 		if (Dir_2_Move.y > 0 && front != DOWN)
 				turn_down();
 	}
-if (int(x_dist) == 0 || int(y_dist) == 0)
+if ((int(x_dist) == 0 || int(y_dist) == 0 )&&(!isInCoolDown()))
 {
-	if(!isInCoolDown())
 	fire_bullet();
 	bulletFired = true;
 }

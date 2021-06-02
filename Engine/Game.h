@@ -30,6 +30,7 @@
 #include "vector"
 #include <random>
 #include "SoundEffect.h"
+#include "Obstacle.h"
 
 class Game
 {
@@ -71,6 +72,7 @@ private:
 	SoundEffect bulletSound;
 	SoundEffect explosionSound;
 	bool GameOver=false;
+	Obstacle obstacle;
 	//30 secs spawn time
  	/********************************/
 };

@@ -148,6 +148,7 @@
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Mouse.h" />
+    <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Rectf.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Sound.h" />
@@ -165,6 +166,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Rectf.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="tank.cpp" />

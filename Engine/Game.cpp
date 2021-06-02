@@ -21,19 +21,20 @@
 #include "MainWindow.h"
 #include "Game.h"
 
-Game::Game( MainWindow& wnd )
+Game::Game(MainWindow& wnd)
 	:
-	wnd( wnd ),
-	gfx( wnd ),
+	wnd(wnd),
+	gfx(wnd),
 	Wall(Vec2(400, 300), 600, 500),
 	Origin(Vec2(Wall.get_left(), Wall.get_top())),
-	Player1(Origin+Vec2(300.0f,300.0f),Vec2(200.0f,0.0f), 30.0f, 25.0f, Colors::Green),
+	Player1(Origin + Vec2(300.0f, 300.0f), Vec2(200.0f, 0.0f), 30.0f, 25.0f, Colors::Green),
 	rng(rd()),
-	xDist(15, int(Wall.width)-17),
-	yDist(15, int(Wall.height)-17),
-	stanceDist(0,3),
-	bulletSound( {L"Sound\\bullet fire.wav"}),
-	explosionSound({L"Sound\\big explosion.wav"}, 0.2f, 0.25f)
+	xDist(15, int(Wall.width) - 17),
+	yDist(15, int(Wall.height) - 17),
+	stanceDist(0, 3),
+	bulletSound({ L"Sound\\bullet fire.wav" }),
+	explosionSound({ L"Sound\\big explosion.wav" }, 0.2f, 0.25f),
+	obstacle(Vec2(200.0f, 100.0f), 100.0f, 50.0f, obstacle_type::grass)
 {
 }
 
@@ -116,7 +117,6 @@ void Game::Spawn_Enemy()
 	evil.update_velocity();
 	Enemy.push_back(evil);
 }
-
 void Game::ComposeFrame()
 {
 	if (!GameOver)
@@ -127,5 +127,7 @@ void Game::ComposeFrame()
 		{
 			Enemy[i].draw_Tank(gfx);
 		}
+		obstacle.Draw(gfx);
 	}
+
 }
