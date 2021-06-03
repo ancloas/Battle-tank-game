@@ -318,10 +318,10 @@ void Graphics::PutPixel( int x,int y,Color c )
 
 void Graphics::DrawRectangle(int x, int y, int width, int height, Color c)
 {
-	for (int i = x; i < width; i++)
+	for (int i = 0; i < width; i++)
 	{
-		for (int j = y; j < height; j++)
-			PutPixel(i, j, c);
+		for (int j = 0; j < height; j++)
+			PutPixel(i+x, j+y, c);
 	  }
 }
 void Graphics::DrawRectangle_by_Centre(int centre_x, int centre_y, int width, int height, Color c)
