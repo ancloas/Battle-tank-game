@@ -129,5 +129,9 @@ void Game::ComposeFrame()
 		}
 		obstacle.Draw(gfx);
 	}
+	for (int i = 0; i < Player1.Get_Life(); i++)
+	{
+		gfx.DrawRectangle(10 * i+10, 20, 5, 20, Colors::Green);
+	}
 
 }
